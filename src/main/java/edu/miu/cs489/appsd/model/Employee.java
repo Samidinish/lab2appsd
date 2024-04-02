@@ -1,34 +1,58 @@
 package edu.miu.cs489.appsd.model;
 
-
 import java.time.LocalDate;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
-public record Employee(Long employeeId, String firstName, String lastName,
-                       LocalDate employmentDate, Double yealySalary, PensionPlan pensionPlan) {
-    public Employee {
-        if (employeeId == null) {
-            throw new IllegalArgumentException("Employee ID cannot be null");
-        }
-        if (firstName == null || firstName.isBlank()) {
-            throw new IllegalArgumentException("First name cannot be null or empty");
-        }
-        if (lastName == null || lastName.isBlank()) {
-            throw new IllegalArgumentException("Last name cannot be null or empty");
-        }
-        if (employmentDate == null) {
-            throw new IllegalArgumentException("Employment date cannot be null");
-        }
-        if (yealySalary == null || yealySalary < 0) {
-            throw new IllegalArgumentException("Yearly salary cannot be null or negative");
-        }
-        if (pensionPlan == null) {
-            throw new IllegalArgumentException("Pension plan cannot be null");
-        }
+public class Employee {
+    private Long employeeId;
+    private String firstName;
+    private String lastName;
+    private LocalDate employmentDate;
+    private Double yealySalary;
+    private PensionPlan pensionPlan;
+
+    public Employee(Long employeeId, String firstName, String lastName,
+                    LocalDate employmentDate, Double yealySalary, PensionPlan pensionPlan) {
+        this.employeeId = employeeId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.employmentDate = employmentDate;
+        this.yealySalary = yealySalary;
+        this.pensionPlan = pensionPlan;
     }
-    //String Json block
+
+    public PensionPlan getPensionPlan() {
+        return pensionPlan;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Double getYealySalary() {
+        return yealySalary;
+    }
+
+    public LocalDate getEmploymentDate() {
+        return employmentDate;
+    }
+
+    // Convert Employee details to a JSON-like format
     public String toJson() {
-        return STR."{\n  \"employeeId\": \{employeeId},\n  \"firstName\": \"\{firstName}\",\n  \"lastName\": \"\{lastName}\",\n  \"employmentDate\": \"\{employmentDate}\",\n  \"yealySalary\": \{yealySalary},\n  \"pensionPlan\": {\n    \"planReferenceNumber\": \{pensionPlan.getPlanReferenceNumber()},\n    \"enrollmentDate\": \"\{pensionPlan.getEnrollmentDate()}\",\n    \"monthlyContribution\": \{pensionPlan.getMonthlyContribution()}\n  }\n}";
+        String pensionPlanJson = pensionPlan == null ? "null" : String.format(
+                "\"planReferenceNumber\": \"%s\", \"enrollmentDate\": \"%s\", \"monthlyContribution\": %.2f",
+                pensionPlan.getPlanReferenceNumber(),
+                pensionPlan.getEnrollmentDate().format(DateTimeFormatter.ISO_LOCAL_DATE),
+                pensionPlan.getMonthlyContribution()
+        );
+
+        return String.format("{ \"employeeId\": \"%d\", \"firstName\": \"%s\", \"lastName\": \"%s\", \"yealySalary\": \"%.2f\", \"employmentDate\": \"%s\", %s }",
+                employeeId,
+                firstName,
+                lastName,
+                yealySalary,
+                employmentDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                pensionPlanJson
+        );
     }
 
 }

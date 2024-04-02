@@ -1,33 +1,33 @@
 package edu.miu.cs489.appsd;
-
-import com.google.gson.Gson;
 import edu.miu.cs489.appsd.model.Employee;
+import edu.miu.cs489.appsd.model.EmployeeManager;
 import edu.miu.cs489.appsd.model.PensionPlan;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import static java.lang.StringTemplate.STR;
 
 public class EmployeeCLI {
     public static void main(String[] args) {
+        EmployeeManager employeeManager = new EmployeeManager();
+        PensionPlan pensionPlan1 = new PensionPlan("EX1089", LocalDate.parse("2023-01-17"), 100.00);
+        Employee employee1 = new Employee(1L, "Daniel", "Agar", LocalDate.parse("2018-01-17"), 105945.50, pensionPlan1);
+        Employee employee2 = new Employee(2L, "Benard", "Shaw", LocalDate.parse("2019-04-03"), 197750.00, null);
+        PensionPlan pensionPlan2 = new PensionPlan("SM2307", LocalDate.parse("2019-11-04"), 1555.50);
+        Employee employee3 = new Employee(3L, "Carly", "Agar", LocalDate.parse("2014-05-16"), 842000.75, pensionPlan2);
+        Employee employee4 = new Employee(4L, "Wesley", "Schneider", LocalDate.parse("2019-05-02"), 74500.00, null);
 
+        employeeManager.addEmployee(employee1);
+        employeeManager.addEmployee(employee2);
+        employeeManager.addEmployee(employee3);
+        employeeManager.addEmployee(employee4);
 
-        var empList = new java.util.ArrayList<>(List.of(
-                new Employee(1L, "John", "Doe", LocalDate.of(2020, 1, 1), 100000.0,
-                        new PensionPlan(1L, LocalDate.of(2020, 1, 1), 1000.0)),
-                new Employee(2L, "Jane", "Doe", LocalDate.of(2020, 1, 1), 100000.0,
-                        new PensionPlan(2L, LocalDate.of(2020, 1, 1), 1000.0)),
-                new Employee(3L, "Jim", "Doe", LocalDate.of(2020, 1, 1), 100000.0,
-                        new PensionPlan(3L, LocalDate.of(2020, 1, 1), 1000.0)),
-                new Employee(4L, "Jill", "Doe", LocalDate.of(2020, 1, 1), 100000.0,
-                        new PensionPlan(4L, LocalDate.of(2020, 1, 1), 1000.0))
-        ));
-        empList.sort(Comparator.comparing(Employee::lastName)
-                .thenComparing(Employee::yealySalary, Comparator.reverseOrder()));
-        empList.forEach(emp -> System.out.println(emp.toJson()));
+        System.out.println("//////////////////////////////");
+        System.out.println("All Employees:");
+        employeeManager.printAllEmployees();
+
+        System.out.println("//////////////////////////////");
+
+        System.out.println("\nUpcoming Pension Enrollees:");
+        employeeManager.printUpcomingEnrollees();
     }
-
 }
+
