@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmployeeManager {
     private List<Employee> employees = new ArrayList<>();
@@ -21,20 +22,20 @@ public class EmployeeManager {
         }
     }
     public void printUpcomingEnrollees() {
-        LocalDate nextMonthStart = LocalDate.now().plusMonths(1).withDayOfMonth(1);
-        LocalDate nextMonthEnd = nextMonthStart.plusMonths(1).minusDays(1);
+        LocalDate localDateStart = LocalDate.now().plusMonths(1).withDayOfMonth(1);
+        LocalDate qualifiedLocalDate = localDateStart.plusMonths(1).minusDays(1);
 
         List<Employee> upcomingEnrollees = employees.stream()
-                .filter(e -> e.getPensionPlan() == null || e.getPensionPlan().getPlanReferenceNumber() == null)
-                .filter(e -> (e.getEmploymentDate().isEqual(nextMonthStart) ||
-                        e.getEmploymentDate().isEqual(nextMonthEnd) ||
-                        (e.getEmploymentDate().isAfter(nextMonthStart) && e.getEmploymentDate().isBefore(nextMonthEnd))))
+                .filter(employee -> employee.getPensionPlan() == null)
+                .filter(employee -> employee.getEmploymentDate().isBefore(qualifiedLocalDate.plusDays(1)))
                 .sorted(Comparator.comparing(Employee::getEmploymentDate))
                 .toList();
 
         for (Employee employee : upcomingEnrollees) {
             System.out.println(employee.toJson());
         }
+
+
     }
 
 }
