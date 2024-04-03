@@ -28,6 +28,7 @@ public class EmployeeCLI {
 
         System.out.println("\nUpcoming Pension Enrollees:");
         employeeManager.printUpcomingEnrollees();
+        System.out.println("CI/CD Pipeline is working fine.");
 
 
     }
