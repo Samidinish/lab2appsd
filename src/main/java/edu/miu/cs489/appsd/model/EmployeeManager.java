@@ -22,12 +22,15 @@ public class EmployeeManager {
         }
     }
     public void printUpcomingEnrollees() {
-        LocalDate localDateStart = LocalDate.now().plusMonths(1).withDayOfMonth(1);
-        LocalDate qualifiedLocalDate = localDateStart.plusMonths(1).minusDays(1);
+        LocalDate nextMonthLocalDate = LocalDate.now().plusMonths(1);//4, May 2024
+//        LocalDate qualifiedLocalDate = localDateStart.plusMonths(1).minusDays(1);
 
         List<Employee> upcomingEnrollees = employees.stream()
                 .filter(employee -> employee.getPensionPlan() == null)
-                .filter(employee -> employee.getEmploymentDate().isBefore(qualifiedLocalDate.plusDays(1)))
+                .filter(employee -> (employee.getEmploymentDate().plusYears(5).getMonth().equals(nextMonthLocalDate.getMonth())
+                        &&
+                        employee.getEmploymentDate().plusYears(5).getYear() == nextMonthLocalDate.getYear())
+                        )
                 .sorted(Comparator.comparing(Employee::getEmploymentDate))
                 .toList();
 
